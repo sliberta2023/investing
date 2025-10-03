@@ -15,3 +15,8 @@ python scripts/extract_transcript.py "https://example.com/landing-page" --output
 The script first looks for HTML `<track>` caption tags and, when found, downloads
 the referenced WebVTT/SRT file(s). It falls back to searching for JSON blobs
 that contain a `"transcript"` array.
+
+> **Note**
+> The downloader now forces TLS 1.2 when fetching pages. Some landing-page
+> providers respond with `ssl.SSLError: WRONG_VERSION_NUMBER` during a TLS 1.3
+> handshake; this update works around that server bug.

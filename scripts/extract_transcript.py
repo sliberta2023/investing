@@ -18,6 +18,7 @@ import argparse
 import json
 import os
 import re
+import ssl
 import sys
 from dataclasses import dataclass
 from html.parser import HTMLParser
@@ -51,10 +52,26 @@ class _HTMLTrackCollector(HTMLParser):
             self.tracks.append((src, label))
 
 
+def _ssl_context() -> ssl.SSLContext:
+    """Return an ``SSLContext`` compatible with strict servers."""
+
+    context = ssl.create_default_context()
+    # Some marketing platforms misbehave when negotiating TLS 1.3.
+    if hasattr(context, "maximum_version"):
+        context.maximum_version = ssl.TLSVersion.TLSv1_2  # type: ignore[attr-defined]
+    return context
+
+
 def fetch(url: str) -> bytes:
     """Download ``url`` returning the raw bytes."""
-    request = Request(url, headers={"User-Agent": USER_AGENT})
-    with urlopen(request) as response:  # type: ignore[no-untyped-call]
+    request = Request(
+        url,
+        headers={
+            "User-Agent": USER_AGENT,
+            "Accept": "text/html,application/json;q=0.9,*/*;q=0.8",
+        },
+    )
+    with urlopen(request, context=_ssl_context()) as response:  # type: ignore[no-untyped-call]
         return response.read()
 
 
