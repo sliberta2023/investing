@@ -1,0 +1,5 @@
+# Python dependencies for the Tigrigna transcription tools
+# Install torch separately if you want a GPU-enabled build from https://pytorch.org/get-started/locally/
+openai-whisper>=20231117
+# Useful for handling audio IO in some environments; whisper will still work without it
+torchaudio>=2.1.0

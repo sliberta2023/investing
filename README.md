@@ -20,7 +20,9 @@ for live/streaming inputs.
    python -m venv .venv
    source .venv/bin/activate
    pip install --upgrade pip
-   pip install openai-whisper torch torchaudio
+   # Optional: install a GPU-enabled torch from https://pytorch.org/get-started/locally/
+   # before installing the rest of the requirements.
+   pip install -r requirements.txt
    ```
 
 ### Usage
